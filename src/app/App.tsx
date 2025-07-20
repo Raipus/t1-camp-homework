@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { LIGHT_THEME, DARK_THEME, LightThemeCssVars, DarkThemeCssVars } from '@admiral-ds/react-ui';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from '@/widgets/header';
 import { TaskListPage } from '@/pages/task-list';
+import { TaskModal } from '@/widgets/task-modal';
 
 export type Theme = 'light' | 'dark';
 
@@ -23,6 +24,9 @@ function App() {
     const stored = localStorage.getItem('theme');
     return stored === 'dark' ? 'dark' : 'light';
   });
+
+  const location = useLocation();
+  const state = location.state as { backgroundLocation?: Location };
 
   useEffect(() => {
     localStorage.setItem('theme', theme);
@@ -48,12 +52,19 @@ function App() {
       {theme === 'light' ? <LightThemeCssVars /> : <DarkThemeCssVars />}
       <Layout>
         <Header theme={theme} setTheme={setTheme} />
-        <Routes>
-          <Route path="/" Component={TaskListPage}>
-            <Route path="task/:id" element={<></>} />
-            <Route path="task/new" element={<></>} />
+        <Routes location={state?.backgroundLocation || location}>
+          <Route path="/" element={<TaskListPage />}>
+            <Route path="task/:id" element={<TaskListPage />} />
+            <Route path="task/new" element={<TaskListPage />} />
           </Route>
         </Routes>
+
+        {state?.backgroundLocation && (
+          <Routes>
+            <Route path="task/:id" element={<TaskModal type="update" />} />
+            <Route path="task/new" element={<TaskModal type="create" />} />
+          </Routes>
+        )}
       </Layout>
     </ThemeProvider>
   );
