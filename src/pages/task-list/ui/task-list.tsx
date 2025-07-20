@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Carousel } from '@admiral-ds/react-ui';
 import { TaskStatusList } from '@/widgets/task-status-list';
 import { useIsMobile } from '@/shared/lib/hooks';
+import { selectTasks } from '@/entities/task';
+import { useSelector } from 'react-redux';
 
 const Background = styled.main<{ $isMobile: boolean }>`
   background: var(--admiral-color-Special_ElevatedBG);
@@ -21,13 +23,30 @@ const Background = styled.main<{ $isMobile: boolean }>`
 export const TaskListPage: React.FC = () => {
   const isMobile = useIsMobile(769);
 
+  const tasks = useSelector(selectTasks);
+
   if (isMobile) {
     return (
       <Background $isMobile={isMobile}>
         <Carousel {...{ infiniteScroll: true, sliderAppearance: 'primary', showButtons: false }}>
-          <TaskStatusList title="Предстоит" isMobile={isMobile} key={1} />
-          <TaskStatusList title="В работе" isMobile={isMobile} key={2} />
-          <TaskStatusList title="Выполнено" isMobile={isMobile} key={3} />
+          <TaskStatusList
+            tasks={tasks.filter((t) => t.status === 'Предстоит') || []}
+            title="Предстоит"
+            isMobile={isMobile}
+            key={1}
+          />
+          <TaskStatusList
+            tasks={tasks.filter((t) => t.status === 'В работе') || []}
+            title="В работе"
+            isMobile={isMobile}
+            key={2}
+          />
+          <TaskStatusList
+            tasks={tasks.filter((t) => t.status === 'Выполнено') || []}
+            title="Выполнено"
+            isMobile={isMobile}
+            key={3}
+          />
         </Carousel>
       </Background>
     );
@@ -35,9 +54,24 @@ export const TaskListPage: React.FC = () => {
 
   return (
     <Background $isMobile={isMobile}>
-      <TaskStatusList title="Предстоит" isMobile={isMobile} key={1} />
-      <TaskStatusList title="В работе" isMobile={isMobile} key={2} />
-      <TaskStatusList title="Выполнено" isMobile={isMobile} key={3} />
+      <TaskStatusList
+        tasks={tasks.filter((t) => t.status === 'Предстоит') || []}
+        title="Предстоит"
+        isMobile={isMobile}
+        key={1}
+      />
+      <TaskStatusList
+        tasks={tasks.filter((t) => t.status === 'В работе') || []}
+        title="В работе"
+        isMobile={isMobile}
+        key={2}
+      />
+      <TaskStatusList
+        tasks={tasks.filter((t) => t.status === 'Выполнено') || []}
+        title="Выполнено"
+        isMobile={isMobile}
+        key={3}
+      />
     </Background>
   );
 };
