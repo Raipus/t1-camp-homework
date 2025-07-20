@@ -1,9 +1,13 @@
-import { Link, T } from '@admiral-ds/react-ui';
-import { Link as RouterLink } from 'react-router-dom';
+import { deleteTask, type ITask } from '@/entities/task';
+import { TaskTag } from '@/features/task-tag';
+import { IconButton, Link, T, TooltipHoc } from '@admiral-ds/react-ui';
+import { useDispatch } from 'react-redux';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import DeleteSolid from '@admiral-ds/icons/build/system/DeleteSolid.svg?react';
 
 type Props = {
-  task?: string;
+  task: ITask;
 };
 
 const Source = styled(Link)`
@@ -18,6 +22,7 @@ const Source = styled(Link)`
   transition: scale 0.5s;
   overflow: visible;
   text-decoration: none;
+  gap: 1rem;
 
   &:hover {
     scale: 110%;
@@ -25,28 +30,37 @@ const Source = styled(Link)`
   }
 `;
 
-export const TaskItem: React.FC<Props> = () => {
-  //   Временное задание для проверки
-  const task = {
-    id: 1,
-    title: 'Do this task',
-    descripton: 'A long description of the task afa gag aa g aga gaga gag agag',
-    category: 'Bug',
-    priority: 'Low',
-    status: 'To Do',
-  };
+const ButtonWithTooltip = TooltipHoc(IconButton);
+
+export const TaskItem: React.FC<Props> = ({ task }) => {
+  const dispatch = useDispatch();
+  const location = useLocation();
 
   return (
-    <Source as={RouterLink} to={`task/${task.id}`}>
+    <Source as={RouterLink} to={`task/${task.id}`} state={{ backgroundLocation: location }}>
       <T font="Header/H6" as="h3">
         {task.title}
       </T>
       <T font="Body/Body 2 Long" as="p">
-        {task.descripton}
+        {task.description}
       </T>
-      {/* Bug (Danger) / Feature (Success) / Documentation (Primary) / Refactor (Warning) / Test (Neutral)
-
-      Low (Success) / Medium (Warning) / High (Danger) */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+          <TaskTag title={task.category} />
+          <TaskTag title={task.priority} />
+        </div>
+        <ButtonWithTooltip
+          renderContent={() => 'Удалить задачу'}
+          dimension="s"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dispatch(deleteTask(task.id));
+          }}
+        >
+          <DeleteSolid />
+        </ButtonWithTooltip>
+      </div>
     </Source>
   );
 };
