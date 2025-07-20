@@ -1,0 +1,24 @@
+:root {
+  background:
+    radial-gradient(
+      298.4% 141.42% at 99% 100%,
+      rgba(0, 0, 255, 0.35),
+      rgba(6, 6, 114, 0.35) 29.735%,
+      rgba(6, 6, 114, 0) 64.241%
+    ),
+    rgb(3, 1, 37);
+  justify-content: center;
+  display: flex;
+}
+
+body {
+  scrollbar-color: var(--admiral-color-Neutral_Neutral90) transparent;
+}
+
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--admiral-color-Neutral_Neutral90);
+}
