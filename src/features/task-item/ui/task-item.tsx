@@ -1,10 +1,10 @@
 import { deleteTask, type ITask } from '@/entities/task';
 import { TaskTag } from '@/features/task-tag';
 import { IconButton, Link, T, TooltipHoc } from '@admiral-ds/react-ui';
-import { useDispatch } from 'react-redux';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import DeleteSolid from '@admiral-ds/icons/build/system/DeleteSolid.svg?react';
+import { useAppDispatch } from '@/app/store';
 
 type Props = {
   task: ITask;
@@ -33,7 +33,7 @@ const Source = styled(Link)`
 const ButtonWithTooltip = TooltipHoc(IconButton);
 
 export const TaskItem: React.FC<Props> = ({ task }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const location = useLocation();
 
   return (
@@ -55,6 +55,7 @@ export const TaskItem: React.FC<Props> = ({ task }) => {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
+            if (!task?.id) return;
             dispatch(deleteTask(task.id));
           }}
         >
