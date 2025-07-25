@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { LIGHT_THEME, DARK_THEME, LightThemeCssVars, DarkThemeCssVars } from '@admiral-ds/react-ui';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, matchPath } from 'react-router-dom';
 import { Header } from '@/widgets/header';
 import { TaskListPage } from '@/pages/task-list';
 import { TaskModal } from '@/widgets/task-modal';
@@ -27,6 +27,10 @@ function App() {
 
   const location = useLocation();
   const state = location.state as { backgroundLocation?: Location };
+
+  const isEdit = !!matchPath('/task/:id', location.pathname);
+  const isCreate = location.pathname === '/task/new';
+  const isModalRoute = isEdit || isCreate;
 
   useEffect(() => {
     localStorage.setItem('theme', theme);
@@ -59,7 +63,7 @@ function App() {
           </Route>
         </Routes>
 
-        {state?.backgroundLocation && (
+        {isModalRoute && (
           <Routes>
             <Route path="task/:id" element={<TaskModal type="update" />} />
             <Route path="task/new" element={<TaskModal type="create" />} />
