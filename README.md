@@ -4,7 +4,7 @@
 
 Выполненные дз: 3.
 
-Приложение развернуто на: https://t1-camp-homework-e8k4erdef-raipus-projects.vercel.app/
+Приложение развернуто на: https://t1-camp-homework.vercel.app/
 
 ## Инструкция по запуску проекта
 
